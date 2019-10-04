@@ -1,0 +1,392 @@
+---
+title: "Useful R code"
+author: "zizonpingu"
+output:
+  html_document:
+    number_sections: yes
+    toc: yes
+  pdf_document:
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# introduction
+
+이 Markdown는 개인적인 R 코드 공부를 위한 것임.
+
+각 section은 코드의 출처가 되는 사이트이고, 
+
+subsection은 사이트 내 구체적인 코드의 위치를 나타낸다.
+
+subsubsection은 코드의 쓰임새, 모양, 중요도 등을 표시하였다.
+
+---
+
+__추가사항__
+
+* 데이터셋에서 해당 변수만 10개 정도 보기
+* 변수 내항 원하는 결과 찾기 중, 문자 자료가 원하는 문자 들어간 애들 다 모아보기
+* 데이터 값 일괄적으로 바꾸기 (어떤 수치형 변수에서 0.01씩 빼기)
+
+---
+
+__최근 수정일__ : 190930
+
+---
+
+---
+
+__참고사항__
+
+1. 
+Warning message:
+In strsplit(code, "\n", fixed = TRUE) :
+   input string 1 is invalid in this locale
+
+이것은, 인코딩 문제로, UTF-8로 인코딩 했으면, 하나라도 다르게 인코딩되면 이 문제가 발생한다고 함. 이를 위해
+
+Sys.setlocale('LC_ALL','C')
+
+이렇게 치면 해결됨. 인코딩 방식을 하나로 통일하는 것인듯.
+
+---
+---
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+# Basic codes
+
+## data preprocessiong
+여기는 이전에 알고 있던 유용한 코드 또는 출처는 알 수 없는 간단한 코드들을 모았다.
+기본적인 librarys는 아래다.
+
+```{r}
+require(tidyverse)
+
+```
+
+Basic codes section에서는 알고 있었던 코드 중 유용한 코드를 정리하였다. 정리한 코드의 실행을 목적으로 실습을 하기 위한 데이터는 타이타닉 데이터를 사용하겠다.
+
+```{r}
+train <- read.csv("C:/Users/IT/Desktop/민호/kaggle/Titanic machine learning form disaster/train.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+test <- read.csv("C:/Users/IT/Desktop/민호/kaggle/Titanic machine learning form disaster/test.csv", stringsAsFactors = F, na.strings = c("NA", ""))
+test$Survived <- NA
+all <- rbind(train, test)
+```
+기본적인 데이터 객체는 all 이고, all 내 변수 정보는 다음과 같다.
+참고로, train, test 데이터셋은 Survived 변수가 있고 없고 차이임. test 데이터셋은 Survived 변수를 모두 NA로 지정.
+
+++ 이는 dpylr 패키지에 bind_rows() 함수를 사용하면, test set에 Survived 변수를 따로 생성하지 않아도 알아서 NA 값이 들어간 Survived 변수가 생성된 후 training set 밑에 rbind 된다.
+
+```{r}
+str(all)
+```
+
+Variable Name | Description                       |Key, description
+--------------|-----------------------------------|----------------------------------------------
+Survived      | Survival                          |0 = No, 1 = Yes
+Pclass        | Passenger's class                 |1 = 1st, 2 = 2nd, 3 = 3rd 등석
+Name          | Passenger's name                  |
+Sex           | Passenger's sex                   |
+Age           | Passenger's age                   |
+SibSp         | Number of siblings/spouses aboard | 함께 탑승한 형제 또는 배우자 수
+Parch         | Number of parents/children aboard | 함께 탑승한 부모 또는 자녀의 수
+Ticket        | Ticket number                     | 티켓 번호
+Fare          | Fare                              | 티켓 요금
+Cabin         | Cabin                             | 선실 번호
+Embarked      | Port of embarkation 탑승한 곳     |C = Cherbourg, Q = Queenstown, S = Southampton 
+--------------------------------------------------------------------------------------------------
+
+출처 : https://www.kaggle.com/erikbruin/titanic-2nd-degree-families-and-majority-voting
+
+### 변수 이름앞에 매번 데이터 프레임 이름 넣기 싫을 때
+
+```{r}
+with(all, plot(SibSp, Age))
+```
+plot 그리기
+설명 생략
+
+### 객체 모두 지우기
+
+```{r}
+#rm(list=ls())
+```
+
+설명 생략
+
+### 변수별 평균 계산 등 일괄 하기 (aggregate)
+
+```{r}
+#aggregate() ## 보충 공부 필요
+```
+
+추후 공부 후 추가 필요
+
+### NA 포함 변수 빈도 보기
+
+```{r}
+all %>% group_by(Pclass) %>% count()
+```
+
+장점은, NA 결과까지 빈도를 보여줌
+설명 생략
+
+```{r, message=FALSE, warning=FALSE}
+library(Hmisc)
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(caret)
+library(randomForest)
+library(gridExtra)
+library(ROCR)
+library(corrplot)
+```
+
+
+# Articles
+여기서는 논문을 쓰면서 사용한 코드들을 모았음.
+
+
+
+
+
+
+
+
+
+
+# Kaggle
+
+## Titanic data
+
+Titanic data 중 홈페이지 notebook 중 "Erik Bruin" 의 것을 참고.
+
+https://www.kaggle.com/erikbruin/titanic-2nd-degree-families-and-majority-voting
+
+'Megan L. Risdal'것도 참고하였다.
+
+https://www.kaggle.com/mrisdal/exploring-survival-on-the-titanic
+
+
+### 결측 개수 보기 - sapply를 이용하여. ★★
+
+결측 개수 보는 건데, 유용할 듯. sapply는 인수의 데이터 타입이 모두 일치해야 하는 특징이 있음 (numeric은 numeric만)
+
+```{r}
+sapply(all, function(x) {sum(is.na(x))})
+```
+
+### ggplot의 대략적인 과정. ★★
+
+기본적인 ggplot 과정은 이거다. 
+
+여기서는 아주 기초적인 과정만 서술하고 간단한 예시인 bar plot만 보고 넘어간다. 앞으로 ggplot은 각 subsection내 조금씩 추가하면서 새로운 코딩 기술들을 공부하는 식으로 한다.
+
+---
+
+* ggplot(data, aes(x,y,fill)) >> geom_000() >> labs(x=, y=) >> geom_label() >> facet_grid(.~)
+
+---
+
+```{r}
+# how many people died and survived on the Titanic?
+all$Sex <- as.factor(all$Sex)
+all$Survived <- as.factor(all$Survived)
+all$Pclass <- as.ordered(all$Pclass) #because Pclass is ordinal
+```
+
+먼저 성별, 생존 유무, 등급을 factor화 시키고, bar plot을 그려보면,
+
+```{r}
+ggplot(all[!is.na(all$Survived),], aes(x = Survived, fill = Survived)) +
+  geom_bar(stat='count') +
+  labs(x = 'How many people died and survived on the Titanic?') +
+  geom_label(stat='count',aes(label=..count..), size=7) +
+  theme_grey(base_size = 18) # theme_grey : 기본 ggplot 스킨임. #base_size :순수 차트 영역을 제외한 나머지 영역의 크기 지정.
+```
+
+* theme_grey : 기본 ggplot 스킨임. 
+* base_size :순수 차트 영역을 제외한 나머지 영역의 크기 지정.
+* 여기서 all[!is.na(all$Survived),]을 주목하면, all 데이터셋에서 Survived이 결측이 아닌 친구들을 다 모아온다. [ , ] 내 행 부분에 !is.na()를 쓴 것에 주목하자.
+* 그리고 신기한 tip - Survived 변수를 int로 지정하면 회색으로 나오는데 facotr로 변환하고 ggplot 하면 색깔 나옴.
+
+```{r}
+p1 <- ggplot(all, aes(x = Sex, fill = Sex)) +
+  geom_bar(stat='count', position='dodge') + theme_grey() +
+  labs(x = 'All data') +
+        geom_label(stat='count', aes(label=..count..)) +
+        scale_fill_manual("legend", values = c("female" = "pink", "male" = "green")) # 앞에서 aes(fill=)로 지정한 변수의 꾸미기 옵션.
+p2 <- ggplot(all[!is.na(all$Survived),], aes(x = Sex, fill = Survived)) +
+  geom_bar(stat='count', position='dodge') + theme_grey() +
+  labs(x = 'Training data only') +
+        geom_label(stat='count', aes(label=..count..))
+
+require(gridExtra)
+grid.arrange(p1,p2, nrow=1)
+```
+
+* geom_bar() 내 position='dodge'에 주목. 나란히 그리겠다는 의미
+* geom_label()을 넣는 형식에 주목 ------ geom_label(stat='count', aes(label=..count..))
+* scale_fill_manual() : 앞에서 aes(fill=)로 지정한 변수의 꾸미기 옵션.
+* theme(legend.position="none") # legend 위치, none은 없애기
+
+
+
+### 새로운 변수 생성 - 다른이름변수로 코딩 ★
+```{r}
+all$PclassSex[all$Pclass=='1' & all$Sex=='male'] <- 'P1Male'
+```
+
+
+* 새로운 변수 PclassSex 생성시, [   ] 내 조건이 만족되면 'p1Male'이라고 하라.
+
+
+### character variable split 기술 ★★
+```{r}
+aa <- c("Braund, Mr. Owen Harris", "Cumings, Mrs. John Bradley (Florence Briggs Thayer)" ,"Heikkinen, Miss. Laina")
+strsplit(aa, split='[,.]')
+```
+
+
+* X=("a, b. c", "d, e. f", "g, h. i")가 있을 때, split한 경우(여기서는 ","와 "."기준 - [,.])
+* X의 첫번째 인수 a b c 는 [[1]] 에 [1] a [2] b [3] c로 split 됨.
+* 따라서 strsplit()한 객체는 3개의 인수를 가지고, 각 인수 내 또 3개의 인수를 가지는 벡터 품은 벡터 꼴이 됨.
+
+---
+
+이걸 이용해서 name 변수의 이름 중 Title을 구분해보면,
+
+```{r}
+#Extracting Title and Surname from Name
+all$Surname <- sapply(all$Name, function(x) {strsplit(x, split='[,.]')[[1]][1]})
+#correcting some surnames that also include a maiden name
+all$Surname <- sapply(all$Surname, function(x) {strsplit(x, split='[-]')[[1]][1]}) # 이거 -가 포함된 것 찾기 코드 짜보기
+
+all$Title <- sapply(all$Name, function(x) {strsplit(x, split='[,.]')[[1]][2]})
+all$Title <- sub(' ', '', all$Title) # removing spaces before title
+
+kable(table(all$Sex, all$Title))
+```
+
+벡터 내 벡터가 존재하는 형식이라고 할 수 있다. - [[n]] 내 3개의 [1],[2],[3] index 존재.
+
+* kable()은 knitr 패키지 내 함수로, tex형 table 스킨임.
+* sub(A,B,var) 은 var 변수 값 중 A문자를 B문자로 바꾸겠다. - 여기서는, 문자 내 공백을 없애기 위해 사용하였다.
+
+++ gsub()은 sub()보다 상위 개념(g=globe) : 여러가지 조건을 한꺼번에 사용가능하다. sub()의 경우, 한 값에서 최초로 인식하는 하나의 조건만 만족하는 값을 다음 인수의 값으로 변경하는데 반해, gsub()는 여러가지 조건을 만족하는 모든 경우의 값을 다음 인수의 값으로 변경해준다. 
+
+++ strsplit()에서 split= 에 NULL 값 집어 넣으면 그냥 "C84" > "C" "8" "4" 문자 하나하나 분리된다.
+
+(예) 
+```{r}
+all$Title <- gsub('(.*, ) | (\\..*)', '', all$Name) 
+```
+
+여기서, """(.\*, ) 조건과 (\\..\*)""" 조건을 한꺼번에 만족하는 값을 ''으로 변경한다는 소리이다.
+* "Braund, Mr. Owen Harris" 
+라면 ', '앞의 문자를 ''으로, '.'뒤의 문자를 ''으로 변경한다는 의미이다.
+자세한 Regular expression은 R 뿐만 아니라 다른 언어에서도 통용된다. 따라서 몇 가지 여기서 짚고 넘어간다.
+
+* '.' : 문자 하나. a, b, . 의미.
+* '.*' : 문자값 전체를 의미. a, ab, abab, ''
+* '.*b' : 전체 중 b 앞의 모든 문자.
+* 'b.*' : 전제 증 b 뒤의 모든 문자.
+
+
+---
+
+### 변수 내 값에서 특정 문자가 있는 행 위치 AND 그 값 찾기 - character variable. ★★★
+
+바로 앞 절을 보면, 두번째 [-]로 이루어진 값을 또 strsplit 하라는 코드가 있는데, 실제 -가 포함된 이름은 어떻게 찾는가 라는 의문이 들었다.
+이를 코드로 구현해보자.
+
+```{r}
+all$Surname <- sapply(all$Surname, function(x) {strsplit(x, split='[-]')[[1]][1]})
+```
+
+이 코드에서 -가 포함된 행의 위치, 그 값은 무엇인지 알려한다.
+위치는 index로, 값은 그 -가 포함된 값을 검색하는 식으로 코딩해보자
+
+```{r}
+grep("[-]", all$Name) # 특정 값 존재하는 행 위치(index) - "-"을 사용해도 무방하다.
+```
+
+* grep()는 특정 값이 존재하는 행의 번호 (index)를 출력한다.
+
+```{r}
+all$Name[grep("[-]", all$Name)]
+```
+
+* 변수 옆에 [] 붙여서 해당하는 값을 추출할 수도 있지만, 왠지 index도 통일하면 좋을 것 같다.
+
+```{r}
+all[grep("[-]", all$Name),][4] # 4번째 변수는 Name
+```
+
+이런 식으로 하면 index와 같이 출력 가능해서 좋은 듯 하다.
+
+++ 참고로, 생성한 객체가 너무 많을 때 ls()를 하나의 벡터로 생각하고, 벡터 내 특정 값을 포함하는 객체를 뽑아 제거하는것도 가능하다.
+
+
+### 데이터셋에서, 특정 변수 없애는 신박한 방법 
+
+* 원래는, %>%에서 select() 내 -변수 이런 식을 없앨 수도 있지만 이런 방법도 있다.
+예를 들어, all에서 Name, Cabin 없애고 싶으면,
+
+```{r}
+names(all)
+names(all[, !names(all) %in% c('Name','Cabin')])
+```
+
+
+### mice package에서 결측치 처리 전, 결측치가 어느 변수에 어느정도 있는지 판별할 수 있는 plot - md.pattern(). ★
+
+```{r}
+library(mice)
+md.pattern(all)
+```
+
+* 서: id. id별로 특수 패턴이 있는 경우. 잘보면, 한줄한줄 패턴 다 다르다.
+* 동: 각 id당 오류 개수.
+* 북: 변수.
+* 남: 변수 별 오류 개수.
+
+
+
+## IEEE-CIS Fraud Detection
+
+Khanh Vu Duy의 R script를 참고하였다.
+
+https://www.kaggle.com/duykhanh99/lgb-fe-0-9492-lb-newfeature-0-9496-lb
+
+###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
