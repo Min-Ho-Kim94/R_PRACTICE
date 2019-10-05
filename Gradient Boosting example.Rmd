@@ -1,0 +1,118 @@
+---
+title: "Gradient Boosting example"
+author: "민호"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Gradient Boosting
+
+ Gradient Boosting예제를 위한 Markdown이다. StatQuest의 간단한 예제를 가지고 GBM이 어떤 알고리즘을 가지고 훈련되는지 알아 보고 이를 실제로 R에서 구현해 볼 것이다.
+
+사용할 분류기는 regression tree와 classification tree이다.
+
+## Regression tree
+
+예시)
+ <train>
+ Height | Favorite Color | Gender | Weight
+--------|----------------|--------|--------
+ 1.6    | Blue           | Male   | 88
+ 1.6    | Green          | Female | 76
+ 1.5    | Blue           | Female | 56
+-------------------------------------------
+  
+```{r}
+library(tidyverse)
+library(gbm)
+```
+
+```{r}
+data <- tribble(
+  ~Height, ~Color, ~Gender, ~Weight,
+  1.6, "Blue", "Male", 88,
+  1.6, "Green", "Female", 76,
+  1.5, "Blue", "Female", 56
+)
+
+data
+```
+
+ Heght, Color, Gender은 독립변수이고, Weight는 종속변수이다. 3개의 변수를 가지고 Weight를 예측하는 분류기를 M(여기서는 2)번 반복하는 부스팅 방법을 사용할 것이다.
+ 
+```{r}
+# boost = gbm(Weight~., data=data, distribution = "gaussian", n.tree=2, shrinkage=0.1, interaction.depth = 1)
+```
+ 
+ 데이터가 너무 작아서 안된단다. 이 예제를 MASS library에 Boston으로 실행해보면,
+ 
+```{r}
+library(MASS)
+train=sample(1:506,size=374)
+
+Boston.boost=gbm(medv ~ . ,data = Boston[train,],distribution = "gaussian",n.trees = 10000,
+                  shrinkage = 0.01, interaction.depth = 4, keep.data = T)
+Boston.boost
+
+summary(Boston.boost)
+
+```
+ 
+ * train data는 374개이다.
+ * medv를 예측하는 모형이고, distribution은 정규분포 가정이 필요하다.
+ * tree는 10000개 (10000번 반복), 학습률은 0.01, interaction.depth은 1인경우, additive model이다. 여기서는 4를 사용하였다.
+ 
+ 결과를 살펴보면, medv를 예측하는데 13개의 변수가 사용되었고, 그 중요도는 lstat, rm, dis, crim, 등 순으로 나열되었다.
+ 상대적으로 lstat와 rm이 35, 31로 매우 높고, 나머지는 10 이하로 급격하게 중요도가 떨어진다.
+ 
+ Boston.boost에 들어간 내용을 살펴보면
+ 
+```{r}
+names(Boston.boost)
+
+Boston.boost$fit # 374개의 train 집합의 Predicted values
+Boston.boost$train.error # 10000번 반복할 때마다 error 계산
+head(Boston.boost$tree) # 각 tree에 대한 숫자값들이다.
+Boston.boost$shrinkage # learing rate
+```
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ ## Classification tree
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
