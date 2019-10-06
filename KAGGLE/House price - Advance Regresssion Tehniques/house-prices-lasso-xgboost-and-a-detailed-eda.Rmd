@@ -1,11 +1,14 @@
 ---
-title: "House prices: Lasso, XGBoost, and a detailed EDA"
+title: 'House prices: Lasso, XGBoost, and a detailed EDA'
 author: "Erik Bruin"
 output:
   html_document:
-    number_sections: true
-    toc: true
+    number_sections: yes
+    toc: yes
     toc_depth: 3
+  pdf_document:
+    toc: yes
+    toc_depth: '3'
 ---
 
 ```{r setup, include=FALSE}
@@ -55,8 +58,8 @@ library(xgboost)
 Below, I am reading the csv's as dataframes into R.
 
 ```{r}
-train <- read.csv("../input/train.csv", stringsAsFactors = F)
-test <- read.csv("../input/test.csv", stringsAsFactors = F)
+train <- read.csv("C:/Users/user/Documents/Github/R_PRACTICE/KAGGLE/House price - Advance Regresssion Tehniques/train.csv", stringsAsFactors = F)
+test <- read.csv("C:/Users/user/Documents/Github/R_PRACTICE/KAGGLE/House price - Advance Regresssion Tehniques/test.csv", stringsAsFactors = F)
 ```
 
 ##Data size and structure
