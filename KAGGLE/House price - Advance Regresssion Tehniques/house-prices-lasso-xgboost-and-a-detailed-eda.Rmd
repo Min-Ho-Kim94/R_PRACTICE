@@ -31,7 +31,6 @@ Ask a home buyer to describe their dream house, and they probably won't begin wi
 With 79 explanatory variables describing (almost) every aspect of residential homes in Ames, Iowa, this competition challenges you to predict the final price of each home.
 
 
-<center><img src="http://moziru.com/images/hosue-clipart-sold-1.png"></center>
 
 # Loading and Exploring Data
 
@@ -58,8 +57,8 @@ library(xgboost)
 Below, I am reading the csv's as dataframes into R.
 
 ```{r}
-train <- read.csv("C:/Users/IT/Documents/Github/R_PRACTICE/KAGGLE/House price - Advance Regresssion Tehniques/train.csv", stringsAsFactors = F)
-test <- read.csv("C:/Users/IT/Documents/Github/R_PRACTICE/KAGGLE/House price - Advance Regresssion Tehniques/test.csv", stringsAsFactors = F)
+train <- read.csv("~/Github/R_PRACTICE/KAGGLE/House price - Advance Regresssion Tehniques/train.csv", stringsAsFactors = F)
+test <- read.csv("~/Github/R_PRACTICE/KAGGLE/House price - Advance Regresssion Tehniques/test.csv", stringsAsFactors = F)
 ```
 
 ## Data size and structure
@@ -183,7 +182,7 @@ cat('There are', length(NAcol), 'columns with missing values')
 
 Of course, the 1459 NAs in SalePrice match the size of the test set perfectly. This means that I have to fix NAs in 34 predictor variables.
 
-##Imputing missing data {.tabset}
+## Imputing missing data {.tabset}
 
 In this section, I am going to fix the 34 predictors that contains missing values. I will go through them working my way down from most NAs until I have fixed them all. If I stumble upon a variable that actually forms a group with other variables, I will also deal with them as a group. For instance, there are multiple variables that relate to Pool, Garage, and Basement.
 
@@ -191,7 +190,7 @@ As I want to keep the document as readable as possible, I decided to use the "Ta
 
 Besides making sure that the NAs are taken care off, I have also converted character variables into ordinal integers if there is clear ordinality, or into factors if levels are categories without ordinality. I will convert these factors into numeric later on by using one-hot encoding (using the model.matrix function).
 
-###Pool variables
+### Pool variables
 
 **Pool Quality and the PoolArea variable**
 
@@ -1448,7 +1447,7 @@ cor_numVar <- cor_numVar[CorHigh, CorHigh]
 corrplot.mixed(cor_numVar, tl.col="black", tl.pos = "lt", tl.cex = 0.7,cl.cex = .7, number.cex=.7)
 ```
 
-##Finding variable importance with a quick Random Forest
+## Finding variable importance with a quick Random Forest
 
 Although the correlations are giving a good overview of the most important numeric variables and multicolinerity among those variables, I wanted to get an overview of the most important variables including the categorical variables before moving on to visualization.
 
