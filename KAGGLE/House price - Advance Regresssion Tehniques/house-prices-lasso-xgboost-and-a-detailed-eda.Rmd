@@ -1366,6 +1366,27 @@ str(all$MoSold)
 all$MoSold <- as.factor(all$MoSold)
 ```
 
+
+```{r}
+# exercise
+aa <- ggplot(all[!is.na(all$SalePrice),], aes(x=as.factor(YrSold), y=SalePrice)) + 
+  geom_bar(fill="blue", stat="summary", fun.y="median") +
+  scale_y_continuous(breaks=seq(0,300000,by=25000), labels = scales::comma) +
+  coord_cartesian(ylim=c(0:200000)) +
+  geom_hline(yintercept = median(all$SalePrice, na.rm=T),linetype = "dashed", color="red") +
+  geom_label(stat="count", position = "identity", aes(label=..count.., y=..count..))
+
+bb <- ggplot(all[!is.na(all$SalePrice),], aes(x=MoSold, y=SalePrice)) +
+  geom_bar(fill="blue", stat="summary", fun.y="median") +
+  scale_y_continuous(breaks=seq(0,800000, by=25000), labels = scales::comma) +
+  coord_cartesian(ylim=c(0:200000)) +
+  geom_hline(yintercept = median(all$SalePrice, na.rm=T), color="red", linetype = "dashed") +
+  geom_label(stat="count", aes(label=..count.., y=..count..))
+
+
+grid.arrange(aa, bb, widths=c(1,2))
+```
+
 Although possible a bit less steep than expected, the effects of the Banking crises that took place at the end of 2007 can be seen indeed. After the highest median prices in 2007, the prices gradually decreased. However, seasonality seems to play a bigger role, as you can see below.
 
 ```{r}
