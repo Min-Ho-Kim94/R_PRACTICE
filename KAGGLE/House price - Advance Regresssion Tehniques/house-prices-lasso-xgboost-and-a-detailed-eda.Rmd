@@ -2039,6 +2039,15 @@ for(i in 1:ncol(DFnumeric)){
 PreNum <- preProcess(DFnumeric, method=c("center", "scale"))
 print(PreNum)
 ```
+
+```{r}
+aa <- DFnumeric$LotFrontage
+bb <- (aa-mean(DFnumeric$LotFrontage))/sd(DFnumeric$LotFrontage) # same to DFnorm$LotFrontage
+# mean = "center", sd = "scale"
+```
+
+
+
 ```{r}
 DFnorm <- predict(PreNum, DFnumeric)
 dim(DFnorm)
